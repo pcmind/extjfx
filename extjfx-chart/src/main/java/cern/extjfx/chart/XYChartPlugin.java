@@ -4,14 +4,11 @@
 
 package cern.extjfx.chart;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Point2D;
@@ -20,7 +17,12 @@ import javafx.scene.chart.Axis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.util.Pair;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Represents an add-on to a XYChart that can either annotate/decorate the chart or perform some interactions with it.
@@ -40,7 +42,8 @@ import javafx.util.Pair;
 public abstract class XYChartPlugin<X, Y> {
 
     private final ObservableList<Node> chartChildren = FXCollections.observableArrayList();
-    private final List<Pair<EventType<MouseEvent>, EventHandler<MouseEvent>>> mouseEventHandlers = new LinkedList<>();
+
+    private final List<Pair<EventType<? extends Event>, EventHandler<? super Event>>> eventHandlers = new LinkedList<>();
 
     private final ObjectProperty<XYChartPane<X, Y>> chartPane = new SimpleObjectProperty<>(this, "chartPane");
 
@@ -86,7 +89,7 @@ public abstract class XYChartPlugin<X, Y> {
         if (node == null) {
             return;
         }
-        for (Pair<EventType<MouseEvent>, EventHandler<MouseEvent>> pair : mouseEventHandlers) {
+        for (Pair<EventType<? extends Event>, EventHandler<?super Event>> pair : eventHandlers) {
             node.removeEventHandler(pair.getKey(), pair.getValue());
         }
     }
@@ -95,7 +98,7 @@ public abstract class XYChartPlugin<X, Y> {
         if (node == null) {
             return;
         }
-        for (Pair<EventType<MouseEvent>, EventHandler<MouseEvent>> pair : mouseEventHandlers) {
+        for (Pair<EventType<? extends Event>, EventHandler<?super Event>> pair : eventHandlers) {
             node.addEventHandler(pair.getKey(), pair.getValue());
         }
     }
@@ -107,8 +110,12 @@ public abstract class XYChartPlugin<X, Y> {
      * @param eventType the event type on which the handler should be called
      * @param handler the event handler to be added to the chart
      */
-    protected final void registerMouseEventHandler(EventType<MouseEvent> eventType, EventHandler<MouseEvent> handler) {
-        mouseEventHandlers.add(new Pair<>(eventType, handler));
+    protected final <T extends MouseEvent> void registerMouseEventHandler(EventType<T> eventType, EventHandler<? super T> handler) {
+        eventHandlers.add(new Pair(eventType, handler));
+    }
+
+    protected final <T extends ScrollEvent> void registerScrollEventHandler(EventType<T> eventType, EventHandler<? super T> handler) {
+        eventHandlers.add(new Pair(eventType, handler));
     }
 
     /**

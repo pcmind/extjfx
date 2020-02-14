@@ -4,29 +4,33 @@
 
 package cern.extjfx.chart.plugins;
 
+import javafx.scene.input.MouseEvent;
+
 import static javafx.scene.input.MouseButton.PRIMARY;
 import static javafx.scene.input.MouseButton.SECONDARY;
-
-import javafx.scene.input.MouseEvent;
 
 /**
  * Utility methods for operating on {@link MouseEvent}s.
  */
-final class MouseEvents {
+public final class MouseEvents {
 
-    static boolean isOnlyPrimaryButtonDown(MouseEvent event) {
+    public static boolean isOnlyPrimaryButtonDown(MouseEvent event) {
         return event.getButton() == PRIMARY && !event.isMiddleButtonDown() && !event.isSecondaryButtonDown();
     }
 
-    static boolean isOnlySecondaryButtonDown(MouseEvent event) {
+    public static boolean isOnlySecondaryButtonDown(MouseEvent event) {
         return event.getButton() == SECONDARY && !event.isPrimaryButtonDown() && !event.isMiddleButtonDown();
     }
 
-    static boolean isOnlyCtrlModifierDown(MouseEvent event) {
+    public static boolean isOnlyShiftModifierDown(MouseEvent event) {
+        return !event.isControlDown() && !event.isAltDown() && !event.isMetaDown() && event.isShiftDown();
+    }
+
+    public static boolean isOnlyCtrlModifierDown(MouseEvent event) {
         return event.isControlDown() && !event.isAltDown() && !event.isMetaDown() && !event.isShiftDown();
     }
 
-    static boolean modifierKeysUp(MouseEvent event) {
+    public static boolean modifierKeysUp(MouseEvent event) {
         return !event.isAltDown() && !event.isControlDown() && !event.isMetaDown() && !event.isShiftDown();
     }
 }
