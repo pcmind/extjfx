@@ -26,8 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import com.sun.javafx.css.converters.BooleanConverter;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -39,6 +37,7 @@ import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableProperty;
+import javafx.css.converter.BooleanConverter;
 import javafx.geometry.Bounds;
 import javafx.geometry.Side;
 import javafx.scene.chart.Axis;
@@ -893,7 +892,7 @@ public class HeatMapChart<X, Y> extends Chart {
             this.xValues = xValues;
             this.yValues = yValues;
             this.zValues = zValues;
-            
+
             fireInvalidated();
         }
     }
@@ -935,7 +934,7 @@ public class HeatMapChart<X, Y> extends Chart {
          * Creates a new instance of ColorGradient.
          *
          * @param stops the gradient's color specification; should contain at least two stops with offsets between 0.0
-         *            and 1.0
+         *              and 1.0
          * @see #getStops()
          */
         public ColorGradient(Stop... stops) {
@@ -946,8 +945,8 @@ public class HeatMapChart<X, Y> extends Chart {
         /**
          * Returns the gradient stops.
          *
-         * @see LinearGradient#getStops()
          * @return gradient stops
+         * @see LinearGradient#getStops()
          */
         public List<Stop> getStops() {
             return stops;
